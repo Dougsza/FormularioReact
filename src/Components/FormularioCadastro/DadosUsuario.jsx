@@ -1,29 +1,18 @@
-import React, { useContext, useState } from "react";
+import React, {useState, useContext } from "react";
 //Estilizações da biblioteca MaterialUi
-import { TextField, Button, Switch, FormControlLabel } from "@material-ui/core";
+import { TextField, Button,} from "@material-ui/core";
 import { validaBotao } from "../../models/cadastro";
 import validacoesCadastro from "../../contexts/validacoesCadastro";
+import useErros from "../../hooks/useErros";
 
 function DadosUsuario({ aoEnviar }) {
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
-  const [error, setError] = useState({ senha: { valido: true, texto: "" } });
-
-  //useContext
+  const [senha, setSenha] = useState("");  
+  //useContext e injeção de dependências para o useErros
   const validacoes = useContext(validacoesCadastro);
+  const [error, validarCampos] = useErros(validacoes);
 
-  function validarCampos(event) {
-    // nome do evento e valor do evento
-    const { name, value } = event.target;
-    //Verifica se o cpf é valido e desativa ou ativa o botão de cadastro
-    const novoEstado = { ...error };
-    novoEstado[name] = validacoes[name](value);
-    setError(novoEstado);
-    console.log(novoEstado);
-  }
-
-  function possoEnviar(){
-    let posso = true;
+  function possoEnviar(){    
     for(let campo in error){
       if(!error[campo].valido){
         return false;

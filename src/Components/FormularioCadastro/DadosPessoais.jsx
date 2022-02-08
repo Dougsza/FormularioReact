@@ -1,8 +1,9 @@
 import React, {useState, useContext} from "react";
 //Estilizações da biblioteca MaterialUi
 import { TextField, Button, Switch, FormControlLabel } from "@material-ui/core";
-import { spacing } from '@material-ui/system';
+//import { spacing } from '@material-ui/system';
 import validacoesCadastro from "../../contexts/validacoesCadastro";
+import useErros from "../../hooks/useErros";
 
 function DadosPessoais(props) {
     /*O useState não devolve só o valor inicial do meu estado para uma variável ele vai desenvolver uma tupla, ou um array
@@ -13,23 +14,13 @@ function DadosPessoais(props) {
     const [novidades, setNovidades] = useState(false);
     const [promocoes, setPromocoes] = useState(true);
     // coloca dentro da variável error o useState um objeto com a variável cpf válido e texto
-    const [error, setError] = useState({cpf:{valido:true, texto: ""}});
     const [button, setButton] = useState({disabled: false});
     //useContext
     const validacoes = useContext(validacoesCadastro);
+    const [error, validarCampos] = useErros(validacoes);    
 
-    function validarCampos(event){ 
-        // nome do evento e valor do evento
-        const {name, value } = event.target
-        //Verifica se o cpf é valido e desativa ou ativa o botão de cadastro        
-        const novoEstado = {...error}
-        novoEstado[name] = validacoes[name](value);
-        setError(novoEstado);
-        console.log(novoEstado);
-    }
 
-    function possoEnviar(){
-      let posso =true;
+    function possoEnviar(){     
       for(let campo in error){
         if(!error[campo].valido){
           return false;
